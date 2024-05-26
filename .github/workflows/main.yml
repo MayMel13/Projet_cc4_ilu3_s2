@@ -23,9 +23,9 @@ jobs:
       run: java Main
 
     - name: Set up OCaml
-      uses: avsm/setup-ocaml@v2
+      uses: avsm/setup-ocaml@v1
       with:
-        ocaml-version: '4.12.0'
+        ocaml-compiler: '4.12.0'
 
     - name: Install dependencies
       run: opam install csv
@@ -35,3 +35,4 @@ jobs:
 
     - name: Run OCaml program
       run: ./read_csv
+
