@@ -1,5 +1,6 @@
 open Csv
 
+(* Définir les types de données *)
 type mode = Bus | Train | Avion | Voiture
 
 type transport = {
@@ -16,14 +17,15 @@ type activite = {
   cout: float;
 }
 
+(* Fonction pour lire et parser un fichier CSV *)
 let read_csv filename =
   let csv = Csv.load filename in
   let rec parse_rows rows current_section transports activites =
     match rows with
-    | [] -> (transports, activites)
+    | [] -> (transports, activites) (* Retourner les listes de transports et d'activites *)
     | row::rest ->
       if List.length row = 0 then
-        parse_rows rest None transports activites
+        parse_rows rest None transports activites (* Ignorer les lignes vides *)
       else
         match current_section with
         | None ->
@@ -66,19 +68,24 @@ let read_csv filename =
            | _ -> parse_rows rest current_section transports activites)
         | _ -> parse_rows rest current_section transports activites
   in
-  parse_rows csv None [] []
+  parse_rows csv None [] [] (* Initialiser les listes vides pour les transports et les activites *)
 
+(* Fonction pour trouver l'itinéraire le plus optimal en termes de coût *)
 let itineraire_optimal transports =
   List.fold_left (fun acc t ->
     match acc with
     | None -> Some t
     | Some t' -> if t.cout < t'.cout then Some t else acc) None transports
 
+(* Fonction pour filtrer les activités par catégorie *)
 let filtrer_activites categorie activites =
   List.filter (fun a -> a.categorie = categorie) activites
 
+(* Fonction principale pour lire le fichier CSV, afficher les informations et calculer l'itinéraire optimal *)
 let () =
   let (transports, activites) = read_csv "data.csv" in
+  
+  (* Afficher les transports *)
   List.iter (fun t -> Printf.printf "Mode: %s, Départ: %s, Arrivée: %s, Durée: %.2f, Coût: %.2f\n"
                (match t.mode with
                 | Bus -> "Bus"
@@ -86,9 +93,12 @@ let () =
                 | Avion -> "Avion"
                 | Voiture -> "Voiture")
                t.heure_depart t.heure_arrivee t.duree t.cout) transports;
+
+  (* Afficher les activités *)
   List.iter (fun a -> Printf.printf "Nom: %s, Catégorie: %s, Coût: %.2f\n"
                a.nom a.categorie a.cout) activites;
 
+  (* Calculer et afficher l'itinéraire optimal *)
   match itineraire_optimal transports with
   | None -> print_endline "Aucun transport trouvé"
   | Some t ->
@@ -100,9 +110,7 @@ let () =
        | Voiture -> "Voiture")
       t.heure_depart t.heure_arrivee t.duree t.cout;
 
+  (* Filtrer et afficher les activités sportives *)
   let activites_sportives = filtrer_activites "Sport" activites in
   List.iter (fun a -> Printf.printf "Nom: %s, Catégorie: %s, Coût: %.2f\n"
                a.nom a.categorie a.cout) activites_sportives
-
-
-
