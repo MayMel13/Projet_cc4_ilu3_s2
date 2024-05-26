@@ -1,0 +1,36 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+
+    - name: Compile Java code
+      run: javac Main.java
+
+    - name: Run Java program
+      run: java Main
+
+    - name: Set up OCaml
+      uses: avsm/setup-ocaml@v1
+      with:
+        ocaml-compiler: 4.12.0
+
+    - name: Install dependencies
+      run: opam install csv
+
+    - name: Compile OCaml code
+      run: ocamlfind ocamlc -o read_csv -package csv -linkpkg read_csv.ml
+
+    - name: Run OCaml program
+      run: ./read_csv
