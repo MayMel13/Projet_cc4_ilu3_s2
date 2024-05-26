@@ -72,9 +72,9 @@ let itineraire_optimal transports =
     | Some t' -> if t.cout < t'.cout then Some t else acc) None transports with
   | None -> None
   | Some t ->
-    Printf.sprintf "Itinéraire optimal - Mode: %s, Départ: %s, Arrivée: %s, Durée: %.2f, Coût: %.2f"
+    Some (Printf.sprintf "Itinéraire optimal - Mode: %s, Départ: %s, Arrivée: %s, Durée: %.2f, Coût: %.2f"
       (match t.mode with Bus -> "Bus" | Train -> "Train" | Avion -> "Avion" | Voiture -> "Voiture")
-      t.heure_depart t.heure_arrivee t.duree t.cout
+      t.heure_depart t.heure_arrivee t.duree t.cout)
 
 let () =
   let transports, activites = read_csv "data.csv" in
@@ -96,5 +96,3 @@ let () =
   (* Filtrer et afficher les activités sportives *)
   let activites_sportives = filtrer_activites Sport activites in
   List.iter (fun a -> Printf.printf "Nom: %s, Catégorie: Sport, Coût: %.2f\n" a.nom a.cout) activites_sportives
-
-
