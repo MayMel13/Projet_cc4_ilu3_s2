@@ -33,8 +33,11 @@ jobs:
         opam install -y csv ocamlfind
 
     - name: Compile OCaml code
-      run: ocamlfind ocamlc -o read_csv -package csv -linkpkg read_csv.ml
+      run: |
+        eval $(opam env)
+        ocamlfind ocamlc -o read_csv -package csv -linkpkg read_csv.ml
 
     - name: Run OCaml program
       run: ./read_csv
+
 
