@@ -126,3 +126,4 @@ let () =
   let activites_sportives = filtrer_activites "Sport" activites in
   afficher_activites activites_sportives
 
+
