@@ -1,5 +1,3 @@
-(* read_csv.ml *)
-
 open Csv
 
 type mode = Bus | Train | Avion | Voiture
@@ -105,4 +103,5 @@ let () =
   let activites_sportives = filtrer_activites "Sport" activites in
   List.iter (fun a -> Printf.printf "Nom: %s, Catégorie: %s, Coût: %.2f\n"
                a.nom a.categorie a.cout) activites_sportives
+
 
