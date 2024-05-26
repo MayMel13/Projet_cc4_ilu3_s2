@@ -81,24 +81,23 @@ let itineraire_optimal transports =
 let filtrer_activites categorie activites =
   List.filter (fun a -> a.categorie = categorie) activites
 
-(* Fonction principale pour lire le fichier CSV, afficher les informations et calculer l'itinéraire optimal *)
-let () =
-  let (transports, activites) = read_csv "data.csv" in
-  
-  (* Afficher les transports *)
+(* Fonction pour afficher les transports *)
+let afficher_transports transports =
   List.iter (fun t -> Printf.printf "Mode: %s, Départ: %s, Arrivée: %s, Durée: %.2f, Coût: %.2f\n"
                (match t.mode with
                 | Bus -> "Bus"
                 | Train -> "Train"
                 | Avion -> "Avion"
                 | Voiture -> "Voiture")
-               t.heure_depart t.heure_arrivee t.duree t.cout) transports;
+               t.heure_depart t.heure_arrivee t.duree t.cout) transports
 
-  (* Afficher les activités *)
+(* Fonction pour afficher les activités *)
+let afficher_activites activites =
   List.iter (fun a -> Printf.printf "Nom: %s, Catégorie: %s, Coût: %.2f\n"
-               a.nom a.categorie a.cout) activites;
+               a.nom a.categorie a.cout) activites
 
-  (* Calculer et afficher l'itinéraire optimal *)
+(* Fonction pour calculer et afficher l'itinéraire optimal *)
+let afficher_itineraire_optimal transports =
   match itineraire_optimal transports with
   | None -> print_endline "Aucun transport trouvé"
   | Some t ->
@@ -108,9 +107,22 @@ let () =
        | Train -> "Train"
        | Avion -> "Avion"
        | Voiture -> "Voiture")
-      t.heure_depart t.heure_arrivee t.duree t.cout;
+      t.heure_depart t.heure_arrivee t.duree t.cout
+
+(* Fonction principale pour lire le fichier CSV et afficher les informations *)
+let () =
+  let (transports, activites) = read_csv "data.csv" in
+  
+  (* Afficher les transports *)
+  afficher_transports transports;
+
+  (* Afficher les activités *)
+  afficher_activites activites;
+
+  (* Calculer et afficher l'itinéraire optimal *)
+  afficher_itineraire_optimal transports;
 
   (* Filtrer et afficher les activités sportives *)
   let activites_sportives = filtrer_activites "Sport" activites in
-  List.iter (fun a -> Printf.printf "Nom: %s, Catégorie: %s, Coût: %.2f\n"
-               a.nom a.categorie a.cout) activites_sportives
+  afficher_activites activites_sportives
+
